@@ -31,13 +31,13 @@ interface Comment {
 }
 
 const categories = [
-  { name: 'Helper', icon: 'Shield', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  { name: 'YouTuber', icon: 'Video', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
-  { name: 'TikToker', icon: 'Music', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
-  { name: 'Жалоба на персонал', icon: 'AlertTriangle', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-  { name: 'Жалоба на игроков', icon: 'UserX', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
-  { name: 'Баги', icon: 'Bug', color: 'bg-green-500/20 text-green-400 border-green-500/30' },
-  { name: 'Идеи', icon: 'Lightbulb', color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' },
+  { name: 'Helper', icon: 'Shield', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30', description: 'Подать заявку на должность помощника' },
+  { name: 'YouTuber', icon: 'Video', color: 'bg-red-500/20 text-red-400 border-red-500/30', description: 'Заявки на статус YouTube-автора' },
+  { name: 'TikToker', icon: 'Music', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30', description: 'Заявки на статус TikTok-автора' },
+  { name: 'Жалоба на персонал', icon: 'AlertTriangle', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30', description: 'Сообщить о нарушениях администрации' },
+  { name: 'Жалоба на игроков', icon: 'UserX', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', description: 'Пожаловаться на поведение игроков' },
+  { name: 'Баги', icon: 'Bug', color: 'bg-green-500/20 text-green-400 border-green-500/30', description: 'Сообщить о найденных ошибках' },
+  { name: 'Идеи', icon: 'Lightbulb', color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30', description: 'Предложить улучшения для сервера' },
 ];
 
 const Index = () => {
@@ -244,13 +244,16 @@ const Index = () => {
               style={{ animationDelay: `${index * 100}ms` }}
               onClick={() => setFilterCategory(category.name)}
             >
-              <div className="flex items-center gap-3">
-                <div className={`p-3 rounded-lg ${category.color} border transition-transform group-hover:scale-110`}>
+              <div className="flex items-start gap-3">
+                <div className={`p-3 rounded-lg ${category.color} border transition-transform group-hover:scale-110 shrink-0`}>
                   <Icon name={category.icon} size={24} />
                 </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-sm text-foreground">{category.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-heading font-semibold text-sm text-foreground mb-1">{category.name}</h3>
+                  <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                    {category.description}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
                     {topics.filter(t => t.category === category.name).length} тем
                   </p>
                 </div>
@@ -266,13 +269,16 @@ const Index = () => {
               className="p-6 bg-card hover:bg-card/80 transition-all cursor-pointer border-border hover:border-primary/50 group"
               onClick={() => setFilterCategory(category.name)}
             >
-              <div className="flex items-center gap-3">
-                <div className={`p-3 rounded-lg ${category.color} border transition-transform group-hover:scale-110`}>
+              <div className="flex items-start gap-3">
+                <div className={`p-3 rounded-lg ${category.color} border transition-transform group-hover:scale-110 shrink-0`}>
                   <Icon name={category.icon} size={24} />
                 </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-sm text-foreground">{category.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-heading font-semibold text-sm text-foreground mb-1">{category.name}</h3>
+                  <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                    {category.description}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
                     {topics.filter(t => t.category === category.name).length} тем
                   </p>
                 </div>
