@@ -8,6 +8,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
+import { AuthDialog } from '@/components/AuthDialog';
+import { UserProfile } from '@/components/UserProfile';
+import { AdminPanel } from '@/components/AdminPanel';
 
 interface ForumTopic {
   id: number;
@@ -38,6 +41,10 @@ const categories = [
 ];
 
 const Index = () => {
+  const [user, setUser] = useState<{ username: string; role: 'user' | 'admin' } | null>(null);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [currentView, setCurrentView] = useState<'forum' | 'profile' | 'admin'>('forum');
+
   const [topics, setTopics] = useState<ForumTopic[]>([
     {
       id: 1,
@@ -75,12 +82,34 @@ const Index = () => {
   const [newComment, setNewComment] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
 
+  const handleLogin = (username: string, role: 'user' | 'admin') => {
+    setUser({ username, role });
+    setCurrentView('forum');
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentView('forum');
+  };
+
+  const handleDeleteTopic = (id: number) => {
+    setTopics(topics.filter(t => t.id !== id));
+  };
+
+  const handleApproveTopic = (id: number) => {
+    console.log('Approved topic:', id);
+  };
+
   const handleCreateTopic = () => {
     if (newTopic.title && newTopic.category && newTopic.content) {
+      if (!user) {
+        setShowAuthDialog(true);
+        return;
+      }
       const topic: ForumTopic = {
         id: topics.length + 1,
         title: newTopic.title,
-        author: 'Гость',
+        author: user.username,
         category: newTopic.category,
         replies: 0,
         views: 0,
@@ -94,9 +123,13 @@ const Index = () => {
 
   const handleAddComment = () => {
     if (newComment.trim() && selectedTopic) {
+      if (!user) {
+        setShowAuthDialog(true);
+        return;
+      }
       const comment: Comment = {
         id: comments.length + 1,
-        author: 'Гость',
+        author: user.username,
         content: newComment,
         timestamp: 'Только что'
       };
@@ -117,18 +150,110 @@ const Index = () => {
     return category || categories[0];
   };
 
+  if (currentView === 'profile' && user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="flex items-center justify-between mb-8">
+            <Button 
+              variant="outline" 
+              onClick={() => setCurrentView('forum')}
+              className="border-border text-foreground hover:bg-secondary"
+            >
+              <Icon name="ArrowLeft" className="mr-2" size={18} />
+              На форум
+            </Button>
+            {user.role === 'admin' && (
+              <Button 
+                onClick={() => setCurrentView('admin')}
+                className="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30"
+              >
+                <Icon name="Shield" className="mr-2" size={18} />
+                Админ-панель
+              </Button>
+            )}
+          </div>
+          <UserProfile username={user.username} role={user.role} onLogout={handleLogout} />
+        </div>
+      </div>
+    );
+  }
+
+  if (currentView === 'admin' && user?.role === 'admin') {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <div className="flex items-center justify-between mb-8">
+            <Button 
+              variant="outline" 
+              onClick={() => setCurrentView('forum')}
+              className="border-border text-foreground hover:bg-secondary"
+            >
+              <Icon name="ArrowLeft" className="mr-2" size={18} />
+              На форум
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => setCurrentView('profile')}
+              className="border-border text-foreground hover:bg-secondary"
+            >
+              <Icon name="User" className="mr-2" size={18} />
+              Мой профиль
+            </Button>
+          </div>
+          <AdminPanel 
+            topics={topics} 
+            onDeleteTopic={handleDeleteTopic}
+            onApproveTopic={handleApproveTopic}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="flex items-center justify-center mb-12 animate-fade-in">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="w-16 h-16 border-2 border-primary rounded-lg rotate-45 flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-primary -rotate-45"></div>
-              </div>
-              <h1 className="text-5xl font-heading font-bold text-primary">TimeWorld</h1>
+        <div className="flex items-center justify-between mb-8 animate-fade-in">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 border-2 border-primary rounded-lg rotate-45 flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-primary -rotate-45"></div>
             </div>
-            <p className="text-muted-foreground text-lg">Форум игрового сервера</p>
+            <div>
+              <h1 className="text-3xl font-heading font-bold text-primary">TimeWorld</h1>
+              <p className="text-muted-foreground text-sm">Форум игрового сервера</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            {user ? (
+              <>
+                {user.role === 'admin' && (
+                  <Button 
+                    onClick={() => setCurrentView('admin')}
+                    className="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30"
+                  >
+                    <Icon name="Shield" className="mr-2" size={18} />
+                    Админ
+                  </Button>
+                )}
+                <Button 
+                  variant="outline"
+                  onClick={() => setCurrentView('profile')}
+                  className="border-primary/30 text-primary hover:bg-primary/10"
+                >
+                  <Icon name="User" className="mr-2" size={18} />
+                  {user.username}
+                </Button>
+              </>
+            ) : (
+              <Button 
+                onClick={() => setShowAuthDialog(true)}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading"
+              >
+                <Icon name="LogIn" className="mr-2" size={18} />
+                Войти
+              </Button>
+            )}
           </div>
         </div>
 
@@ -373,6 +498,12 @@ const Index = () => {
             )}
           </DialogContent>
         </Dialog>
+
+        <AuthDialog 
+          open={showAuthDialog} 
+          onOpenChange={setShowAuthDialog}
+          onLogin={handleLogin}
+        />
       </div>
     </div>
   );
