@@ -47,16 +47,6 @@ const Index = () => {
 
   const [topics, setTopics] = useState<ForumTopic[]>([
     {
-      id: 1,
-      title: 'Заявка на Helper от Steve_Minecraft',
-      author: 'Steve_Minecraft',
-      category: 'Helper',
-      replies: 3,
-      views: 45,
-      lastActivity: '2 часа назад',
-      content: 'Здравствуйте! Хочу подать заявку на статус Helper. Играю на сервере уже 6 месяцев...'
-    },
-    {
       id: 2,
       title: 'Предложение: добавить новые биомы',
       author: 'Alex_Builder',
