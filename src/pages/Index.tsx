@@ -250,7 +250,7 @@ const Index = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-heading font-semibold text-sm text-foreground mb-1">{category.name}</h3>
-                  <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                  <p className="text-muted-foreground mb-2 line-clamp-2 text-xs font-light">
                     {category.description}
                   </p>
                   <p className="text-xs text-muted-foreground">
