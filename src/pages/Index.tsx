@@ -221,7 +221,7 @@ const Index = () => {
             </div>
             <div>
               <h1 className="text-3xl font-heading font-bold text-primary">TimeWorld</h1>
-              <p className="text-muted-foreground text-sm">Форум игрового сервера</p>
+              <p className="text-muted-foreground text-sm">Новая Эра гриферства</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
