@@ -45,18 +45,7 @@ const Index = () => {
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [currentView, setCurrentView] = useState<'forum' | 'profile' | 'admin'>('forum');
 
-  const [topics, setTopics] = useState<ForumTopic[]>([
-    {
-      id: 2,
-      title: 'Предложение: добавить новые биомы',
-      author: 'Alex_Builder',
-      category: 'Идеи',
-      replies: 12,
-      views: 156,
-      lastActivity: '1 час назад',
-      content: 'Предлагаю добавить новые кастомные биомы с уникальными ресурсами...'
-    },
-  ]);
+  const [topics, setTopics] = useState<ForumTopic[]>([]);
 
   const [selectedTopic, setSelectedTopic] = useState<ForumTopic | null>(null);
   const [comments, setComments] = useState<Comment[]>([
